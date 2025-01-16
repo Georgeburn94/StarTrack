@@ -63,7 +63,7 @@
                     {% for artist in artists %}
                     {% for album in artist.albums.all %}
                     <tr>
-                        <td>{{ album.name }}</td>
+                        <td><a href="{% url 'album_tracks' album.albumID %}">{{ album.name }}</a></td>
                         <td>{{ album.year }}</td>
                         <td>{{ artist.name }}</td>
                     </tr>

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Tracks in {{ album.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Tracks in {{ album.name }}</h2>
+    <h4>Artist: {{ album.artist.name }}</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Track Name</th>
+                <th scope="col">Star Rating</th>
+                <th scope="col">Note</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for track in tracks %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ track.name }}</td>
+                <td>{{ track.review.star_rating|default:"N/A" }}</td>
+                <td>{{ track.review.note|default:"No notes" }}</td>
+                <td>
+                    <form method="POST" action="{% url 'add_rating' track.trackID %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="starRating{{ track.trackID }}" class="form-label">Rating</label>
+                            <input type="number" class="form-control" id="starRating{{ track.trackID }}" name="star_rating" min="1" max="5" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="note{{ track.trackID }}" class="form-label">Note</label>
+                            <textarea class="form-control" id="note{{ track.trackID }}" name="note" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+</div>
+{% endblock %}

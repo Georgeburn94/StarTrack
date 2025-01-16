@@ -3,6 +3,144 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<h2>Welcome to My Site</h2>
-<p>This is the home page.</p>
+{% if user.is_authenticated %}
+<div class="container mb-4 text-center">
+    <h2>Your Library</h2>
+    <div class="row">
+        <!-- Artists Table -->
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between">
+                <h3>Artists</h3>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
+                    Add Artist
+                </button>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Bio</th>
+                        <th scope="col">Albums</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for artist in artists %}
+                    <tr>
+                        <td>{{ artist.name }}</td>
+                        <td>{{ artist.bio }}</td>
+                        <td>
+                            <ul>
+                                {% for album in artist.albums.all %}
+                                <li>{{ album.name }} ({{ album.year }})</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Albums Table -->
+        <div class="col-md-6">
+            <div class="d-flex justify-content-between">
+                <h3>Albums</h3>
+                <button type="button" class="btn btn-success outline" data-bs-toggle="modal"
+                    data-bs-target="#addAlbumModal">
+                    Add Album
+                </button>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Artist</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for artist in artists %}
+                    {% for album in artist.albums.all %}
+                    <tr>
+                        <td>{{ album.name }}</td>
+                        <td>{{ album.year }}</td>
+                        <td>{{ artist.name }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Artist Modal -->
+<div class="modal fade" id="addArtistModal" tabindex="-1" aria-labelledby="addArtistModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addArtistModalLabel">Add Artist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'add_artist' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="artistName" class="form-label">Artist Name</label>
+                        <input type="text" class="form-control" id="artistName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="artistBio" class="form-label">Artist Bio</label>
+                        <textarea class="form-control" id="artistBio" name="bio" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Artist</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Album Modal -->
+<div class="modal fade" id="addAlbumModal" tabindex="-1" aria-labelledby="addAlbumModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAlbumModalLabel">Add Album</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'add_album' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="albumName" class="form-label">Album Name</label>
+                        <input type="text" class="form-control" id="albumName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="albumYear" class="form-label">Release Year</label>
+                        <input type="number" class="form-control" id="albumYear" name="year" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="albumArtist" class="form-label">Artist</label>
+                        <select class="form-control" id="albumArtist" name="artist" required>
+                            {% for artist in artists %}
+                            <option value="{{ artist.artistID }}">{{ artist.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Album</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="container text-center">
+    <h2>Welcome to the Music Library</h2>
+    <p>Sign in or register to access your music library.</p>
+    <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
+    <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
+</div>
+{% endif %}
+
 {% endblock %}

@@ -27,24 +27,41 @@
                 <td>{{ track.review.star_rating|default:"N/A" }}</td>
                 <td>{{ track.review.note|default:"No notes" }}</td>
                 <td>
-                    <form method="POST" action="{% url 'add_rating' track.trackID %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="starRating{{ track.trackID }}" class="form-label">Rating</label>
-                            <input type="number" class="form-control" id="starRating{{ track.trackID }}" name="star_rating" min="1" max="5" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="note{{ track.trackID }}" class="form-label">Note</label>
-                            <textarea class="form-control" id="note{{ track.trackID }}" name="note" rows="2"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit Rating</button>
-                    </form>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRatingModal{{ track.trackID }}">
+                        Add Rating
+                    </button>
                     <form method="POST" action="{% url 'delete_track' track.trackID %}" class="mt-2">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-danger">Delete Track</button>
                     </form>
                 </td>
             </tr>
+
+            <!-- Add Rating Modal -->
+            <div class="modal fade" id="addRatingModal{{ track.trackID }}" tabindex="-1" aria-labelledby="addRatingModalLabel{{ track.trackID }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{ track.name }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="{% url 'add_rating' track.trackID %}">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="starRating{{ track.trackID }}" class="form-label">Rating</label>
+                                    <input type="number" class="form-control" id="starRating{{ track.trackID }}" name="star_rating" min="1" max="5" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="note{{ track.trackID }}" class="form-label">Note</label>
+                                    <textarea class="form-control" id="note{{ track.trackID }}" name="note" rows="2"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Rating</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>

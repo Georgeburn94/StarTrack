@@ -4,17 +4,10 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>StarTrack Music Library</h2>
 
-    <!-- Search Form -->
-    <form method="GET" action="{% url 'home' %}" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Search for artists..." value="{{ request.GET.search }}">
-            <button class="btn btn-primary" type="submit">Search</button>
-        </div>
-    </form>
 
-    <!-- Add Artist Button -->
+
+    <!-- Add Artist Button
     <div class="row mb-4">
         <div class="col-6 d-flex justify-content-center">
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
@@ -26,14 +19,28 @@
                 Add Album
             </button>
         </div>
-    </div>
+    </div> -->
 
     {% if user.is_authenticated %}
     <!-- Artists and Albums Tables Side by Side -->
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'home' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search for artists..."
+                value="{{ request.GET.search }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
     <div class="row">
         <!-- Artists Table -->
         <div class="col-md-6">
+            <div class="d-flex justify-content-between">
             <h3>Artists</h3>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -65,7 +72,7 @@
             <div class="d-flex justify-content-between">
                 <h3>Albums</h3>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
-                    Add Album
+                    <i class="fa-solid fa-plus"></i>
                 </button>
             </div>
             <table class="table table-striped">
@@ -91,12 +98,12 @@
         </div>
     </div>
     {% else %}
-        <div class="container text-center">
-            <h2>Welcome to the Music Library</h2>
-            <p>Sign in or register to access your music library.</p>
-            <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
-            <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
-        </div>
+    <div class="container text-center">
+        <h2>Welcome to the Music Library</h2>
+        <p>Sign in or register to access your music library.</p>
+        <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
+    </div>
     {% endif %}
 </div>
 

@@ -4,19 +4,19 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Tracks in {{ album.name }}</h2>
-    <h4>Artist: {{ album.artist.name }}</h4>
+    <h2>{{ album.name }}</h2>
+    <h4>{{ album.artist.name }}</h4>
     <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addTrackModal">
-        Add Track
+        <i class="fa-solid fa-plus"></i>
     </button>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Track Name</th>
-                <th scope="col">Star Rating</th>
-                <th scope="col">Note</th>
-                <th scope="col">Actions</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Review</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -27,22 +27,27 @@
                 <td>{{ track.review.star_rating|default:"N/A" }}</td>
                 <td>{{ track.review.note|default:"No notes" }}</td>
                 <td>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRatingModal{{ track.trackID }}">
-                        Add Rating
-                    </button>
-                    <form method="POST" action="{% url 'delete_track' track.trackID %}" class="mt-2">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Delete Track</button>
-                    </form>
+                    <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary mx-2" data-bs-toggle="modal"
+                            data-bs-target="#addRatingModal{{ track.trackID }}">
+                            <i class="fa-solid fa-pencil"></i>
+                        </button>
+                        <form method="POST" action="{% url 'delete_track' track.trackID %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                        </form>
+                    </div>
                 </td>
             </tr>
 
             <!-- Add Rating Modal -->
-            <div class="modal fade" id="addRatingModal{{ track.trackID }}" tabindex="-1" aria-labelledby="addRatingModalLabel{{ track.trackID }}" aria-hidden="true">
+            <div class="modal fade" id="addRatingModal{{ track.trackID }}" tabindex="-1"
+                aria-labelledby="addRatingModalLabel{{ track.trackID }}" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{ track.name }}</h5>
+                            <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{
+                                track.name }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -50,11 +55,13 @@
                                 {% csrf_token %}
                                 <div class="mb-3">
                                     <label for="starRating{{ track.trackID }}" class="form-label">Rating</label>
-                                    <input type="number" class="form-control" id="starRating{{ track.trackID }}" name="star_rating" min="1" max="5" required>
+                                    <input type="number" class="form-control" id="starRating{{ track.trackID }}"
+                                        name="star_rating" min="1" max="5" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="note{{ track.trackID }}" class="form-label">Note</label>
-                                    <textarea class="form-control" id="note{{ track.trackID }}" name="note" rows="2"></textarea>
+                                    <textarea class="form-control" id="note{{ track.trackID }}" name="note"
+                                        rows="2"></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit Rating</button>
                             </form>

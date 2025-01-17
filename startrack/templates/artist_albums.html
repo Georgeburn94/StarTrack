@@ -5,6 +5,9 @@
 {% block content %}
 <div class="container mt-4">
     <h2>Albums by {{ artist.name }}</h2>
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
+        Add Album
+    </button>
     <ul class="list-group">
         {% for album in albums %}
         <li class="list-group-item">
@@ -13,5 +16,32 @@
         {% endfor %}
     </ul>
     <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+</div>
+
+<!-- Add Album Modal -->
+<div class="modal fade" id="addAlbumModal" tabindex="-1" aria-labelledby="addAlbumModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAlbumModalLabel">Add Album</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'add_album' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="albumName" class="form-label">Album Name</label>
+                        <input type="text" class="form-control" id="albumName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="albumYear" class="form-label">Release Year</label>
+                        <input type="number" class="form-control" id="albumYear" name="year" required>
+                    </div>
+                    <input type="hidden" name="artist" value="{{ artist.artistID }}">
+                    <button type="submit" class="btn btn-primary">Add Album</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

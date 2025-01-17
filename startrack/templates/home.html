@@ -3,22 +3,41 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<div class="container mb-4 text-center">
-    <h2>Your Library</h2>
+<div class="container mt-4">
+    <h2>StarTrack Music Library</h2>
+
+    <!-- Search Form -->
+    <form method="GET" action="{% url 'home' %}" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search for artists..." value="{{ request.GET.search }}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <!-- Add Artist Button -->
+    <div class="row mb-4">
+        <div class="col-6 d-flex justify-content-center">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
+                Add Artist
+            </button>
+        </div>
+        <div class="col-6 d-flex justify-content-center">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
+                Add Album
+            </button>
+        </div>
+    </div>
+
+    {% if user.is_authenticated %}
+    <!-- Artists and Albums Tables Side by Side -->
     <div class="row">
         <!-- Artists Table -->
         <div class="col-md-6">
-            <div class="d-flex justify-content-between mb-2 mt-4">
-                <h3>Artists</h3>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
+            <h3>Artists</h3>
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col">Artist Name</th>
                         <th scope="col">Bio</th>
                         <th scope="col">Albums</th>
                     </tr>
@@ -26,7 +45,7 @@
                 <tbody>
                     {% for artist in artists %}
                     <tr>
-                        <td>{{ artist.name }}</td>
+                        <td><a href="{% url 'artist_albums' artist.artistID %}">{{ artist.name }}</a></td>
                         <td>{{ artist.bio }}</td>
                         <td>
                             <ul>
@@ -43,18 +62,16 @@
 
         <!-- Albums Table -->
         <div class="col-md-6">
-            <div class="d-flex justify-content-between mb-2 mt-4">
+            <div class="d-flex justify-content-between">
                 <h3>Albums</h3>
-                <button type="button" class="btn btn-success outline" data-bs-toggle="modal"
-                    data-bs-target="#addAlbumModal">
-                    <i class="fa-solid fa-plus"></i>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
+                    Add Album
                 </button>
             </div>
-
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col">Album Name</th>
                         <th scope="col">Year</th>
                         <th scope="col">Artist</th>
                     </tr>
@@ -73,6 +90,14 @@
             </table>
         </div>
     </div>
+    {% else %}
+        <div class="container text-center">
+            <h2>Welcome to the Music Library</h2>
+            <p>Sign in or register to access your music library.</p>
+            <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
+        </div>
+    {% endif %}
 </div>
 
 <!-- Add Artist Modal -->
@@ -106,7 +131,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addAlbumModalLabel"><i class="fa-solid fa-plus"></i></h5>
+                <h5 class="modal-title" id="addAlbumModalLabel">Add Album</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -134,13 +159,4 @@
         </div>
     </div>
 </div>
-{% else %}
-<div class="container text-center">
-    <h2>Welcome to the Music Library</h2>
-    <p>Sign in or register to access your music library.</p>
-    <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
-    <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
-</div>
-{% endif %}
-
 {% endblock %}

@@ -46,3 +46,24 @@ def add_rating_view(request, track_id):
         )
         return redirect('album_tracks', album_id=track.album.albumID)
     return render(request, 'album_tracks.html')
+
+def artist_albums_view(request, artist_id):
+    artist = get_object_or_404(Artist, pk=artist_id)
+    albums = artist.albums.all()
+    return render(request, 'artist_albums.html', {'artist': artist, 'albums': albums})
+
+@login_required
+def add_track_view(request, album_id):
+    album = get_object_or_404(Album, pk=album_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        Track.objects.create(name=name, album=album)
+        return redirect('album_tracks', album_id=album.albumID)
+    return render(request, 'album_tracks.html', {'album': album})
+
+@login_required
+def delete_track_view(request, track_id):
+    track = get_object_or_404(Track, pk=track_id)
+    album_id = track.album.albumID
+    track.delete()
+    return redirect('album_tracks', album_id=album_id)

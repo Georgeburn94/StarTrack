@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Albums by {{ artist.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Albums by {{ artist.name }}</h2>
+    <ul class="list-group">
+        {% for album in albums %}
+        <li class="list-group-item">
+            <a href="{% url 'album_tracks' album.albumID %}">{{ album.name }} ({{ album.year }})</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+</div>
+{% endblock %}

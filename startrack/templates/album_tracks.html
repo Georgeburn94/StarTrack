@@ -6,6 +6,9 @@
 <div class="container mt-4">
     <h2>Tracks in {{ album.name }}</h2>
     <h4>Artist: {{ album.artist.name }}</h4>
+    <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addTrackModal">
+        Add Track
+    </button>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -36,11 +39,37 @@
                         </div>
                         <button type="submit" class="btn btn-primary">Submit Rating</button>
                     </form>
+                    <form method="POST" action="{% url 'delete_track' track.trackID %}" class="mt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete Track</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+</div>
+
+<!-- Add Track Modal -->
+<div class="modal fade" id="addTrackModal" tabindex="-1" aria-labelledby="addTrackModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTrackModalLabel">Add Track</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'add_track' album.albumID %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="trackName" class="form-label">Track Name</label>
+                        <input type="text" class="form-control" id="trackName" name="name" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Track</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

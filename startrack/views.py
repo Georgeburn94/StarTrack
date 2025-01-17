@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Artist, Album, Track, Review
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+
 
 def home_page_view(request):
     search_query = request.GET.get('search', '')
@@ -68,3 +70,12 @@ def delete_track_view(request, track_id):
     album_id = track.album.albumID
     track.delete()
     return redirect('album_tracks', album_id=album_id)
+
+def review_feed_view(request):
+    reviews = Review.objects.select_related('track__album__artist', 'user').order_by('-id')
+    paginator = Paginator(reviews, 10)  # Show 10 reviews per page
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'review_feed.html', {'page_obj': page_obj})

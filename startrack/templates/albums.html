@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Albums{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div id="albumCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for artist in artists %}
+            {% for album in artist.albums.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="card" style="width: 18rem; margin: auto;">
+                        {% if "placeholder" in album.featured_image.url %}
+                            <img src="{% static 'images/default.png' %}" class="card-img-top" alt="placeholder image">
+                        {% else %}
+                            <img src="{{ album.featured_image.url }}" class="card-img-top" alt="{{ album.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ album.name }}</h5>
+                            <p class="card-text">{{ artist.name }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#albumCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#albumCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+{% endblock %}

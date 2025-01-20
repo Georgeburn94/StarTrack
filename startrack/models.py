@@ -1,5 +1,7 @@
 from django.db import models 
 from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
+
 
 # Create your models here.
 class Artist(models.Model):
@@ -13,6 +15,7 @@ class Album(models.Model):
     name = models.CharField(max_length=255)  # Name of the album
     year = models.PositiveIntegerField()  # Year the album was released
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="albums")  # FK to Artist
+    featured_image = CloudinaryField('image', default='placeholder')
 
     def __str__(self):
         return self.name

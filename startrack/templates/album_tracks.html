@@ -2,7 +2,76 @@
 
 {% block title %}Tracks in {{ album.name }}{% endblock %}
 
+{% load static %}
+
 {% block content %}
+
+
+
+
+<!-- album cover test -->
+<div class="container">
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            {% if "placeholder" in album.featured_image.url %}
+            <img class="card-img-top" src="{% static 'images/default.png' %}" alt="placeholder image">
+            {% else %}
+            <img class="card-img-top" src=" {{ album.featured_image.url }}" alt="{{ post.title }}">
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Cloudinary Upload Widget -->
+
+<button id="upload_widget" class="cloudinary-button">Upload files</button>
+
+<script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>  
+
+<script type="text/javascript">  
+var myWidget = cloudinary.createUploadWidget({
+  cloudName: 'dwdvhfcpz', 
+  uploadPreset: 'uw_test'}, (error, result) => { 
+    if (!error && result && result.event === "success") { 
+      console.log('Done! Here is the image info: ', result.info); 
+      
+      // Send the image URL to the backend to update the Album model
+      fetch("{% url 'upload_album_image' album.albumID %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{ csrf_token }}",
+        },
+        body: JSON.stringify({
+          imageUrl: result.info.secure_url,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Image uploaded successfully!");
+          location.reload(); // Reload the page to see the updated image
+        } else {
+          alert("Image upload failed.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Image upload failed.");
+      });
+    }
+  }
+)
+
+document.getElementById("upload_widget").addEventListener("click", function(){
+    myWidget.open();
+  }, false);
+</script>
+
+
 <div class="container mt-4">
     <h2>{{ album.name }}</h2>
     <h4>{{ album.artist.name }}</h4>
@@ -50,7 +119,8 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{ track.name }}</h5>
+                            <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{
+                                track.name }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

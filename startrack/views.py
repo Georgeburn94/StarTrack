@@ -2,6 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Artist, Album, Track, Review
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+
+
 
 
 def home_page_view(request):
@@ -79,3 +84,17 @@ def review_feed_view(request):
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'review_feed.html', {'page_obj': page_obj})
+
+@csrf_exempt
+@login_required
+def upload_album_image_view(request, album_id):
+    album = get_object_or_404(Album, pk=album_id)
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        image_url = data.get('imageUrl')
+        if image_url:
+            album.featured_image = image_url
+            album.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'error': 'No image URL provided'})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})

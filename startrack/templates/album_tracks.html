@@ -24,7 +24,11 @@
             <tr>
                 <th scope="row">{{ forloop.counter }}</th>
                 <td>{{ track.name }}</td>
-                <td>{{ track.review.star_rating|default:"N/A" }}</td>
+                <td>
+                    <div class="star-rating" data-rating="{{ track.review.star_rating|default:0 }}">
+                        <!-- Stars will be inserted here by JavaScript -->
+                    </div>
+                </td>
                 <td>{{ track.review.note|default:"No notes" }}</td>
                 <td>
                     <div class="d-flex justify-content-end">
@@ -46,8 +50,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{
-                                track.name }}</h5>
+                            <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{ track.name }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

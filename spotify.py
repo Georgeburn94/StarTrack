@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 import base64
-from requests import post
+from requests import post, get
 import json
 
 if os.path.isfile("env.py"):
@@ -27,5 +27,26 @@ def get_token():
     token = json_result['access_token']
     return token
 
+def get_auth_header(token):
+    return {"Authorization": "Bearer " + token}
+
+def search_for_album(token, album_id):
+    url = "https://api.spotify.com/v1/search"
+    headers = get_auth_header(token)
+
+    query = f"q={album_id}&type=album&limit=1"
+
+    query_url = url + "?" + query
+
+    result = get(query_url, headers=headers)
+    json_result = json.loads(result.content)["albums"]["items"]
+    if len(json_result) == 0:
+        print("No album found")
+        return None
+    
+    return json_result[0]
+
 token = get_token()
-print(token)
+result = search_for_album(token, "since+i+left+you")
+print(result["id"])
+

@@ -63,11 +63,9 @@
 
     </div>
     <div class="col-lg-4">
-      {% if "placeholder" in album.featured_image.url %}
-      <img src="{% static 'images/default.png' %}" alt="placeholder image" class="img-fluid">
-      {% else %}
-      <img src="{{ album.featured_image.url }}" alt="{{ album.name }}" class="img-fluid">
-      {% endif %}
+
+      <img src="{{ album.featured_image }}" alt="{{ album.name }}" class="img-fluid">
+
     </div>
   </div>
 

@@ -1,14 +1,29 @@
 import os
+import django
+import sys
 from pathlib import Path
 import base64
 from requests import post, get
 import json
 
-if os.path.isfile("env.py"):
+
+# Load environment variables
+
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
+
+if os.path.isfile(os.path.join(ROOT_DIR, "env.py")):
     import env
 
 client_id = os.environ.get('CLIENT_ID')
 client_secret = os.environ.get('CLIENT_SECRET')
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+
+django.setup()
+
+from startrack.models import Album, Track, Artist
 
 # Get Auth Token
 
@@ -92,3 +107,38 @@ result = search_for_album(token, "since+i+left+you")
 album_id = result["id"]
 album_details = get_album_tracks_with_details(token, album_id)
 print(album_details)
+
+# Parse Spotify data to models
+
+
+def parse_spotify_data_to_models(spotify_data):
+    # Extract album details
+    album_name = spotify_data["album_name"]
+    album_artist_name = spotify_data["album_artist"]
+    release_year = int(spotify_data["release_year"])
+    cover_image = spotify_data["cover_image"]
+    tracks = spotify_data["tracks"]
+
+    # Create or get the Artist instance
+    artist = Artist.objects.create(name=album_artist_name)
+
+    # Create the Album instance and link it to the artist
+    album = Album.objects.create(
+        name=album_name,
+        year=release_year,
+        artist=artist,
+        featured_image=cover_image
+    )
+
+    # Create Track instances and link them to the album
+    for track in tracks:
+        Track.objects.create(
+            name=track["track_name"],
+            album=album
+        )
+
+    return f"Album '{album_name}' by {album_artist_name} with {len(tracks)} tracks added successfully!"
+
+# Example usage
+parsed_result = parse_spotify_data_to_models(album_details)
+print(parsed_result)

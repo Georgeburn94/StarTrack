@@ -10,6 +10,8 @@ if os.path.isfile("env.py"):
 client_id = os.environ.get('CLIENT_ID')
 client_secret = os.environ.get('CLIENT_SECRET')
 
+# Get Auth Token
+
 def get_token():
     auth_string = client_id + ":" + client_secret
     auth_bytes = auth_string.encode('utf-8')
@@ -30,6 +32,8 @@ def get_token():
 def get_auth_header(token):
     return {"Authorization": "Bearer " + token}
 
+# Search for album id
+
 def search_for_album(token, album_id):
     url = "https://api.spotify.com/v1/search"
     headers = get_auth_header(token)
@@ -46,22 +50,43 @@ def search_for_album(token, album_id):
     
     return json_result[0]
 
-def get_album_tracks(token, album_id):
-    url = f"https://api.spotify.com/v1/albums/{album_id}/tracks"
+# Get album tracks
+
+def get_album_tracks_with_details(token, album_id):
+    # Get album details
+    album_url = f"https://api.spotify.com/v1/albums/{album_id}"
     headers = get_auth_header(token)
-    result = get(url, headers=headers)
-    json_result = json.loads(result.content)
+    album_result = get(album_url, headers=headers)
+    album_json = json.loads(album_result.content)
+
+    # Extract album details
+    album_name = album_json["name"]
+    album_artist = ", ".join(artist["name"] for artist in album_json["artists"])
+    release_year = album_json["release_date"].split("-")[0]
+
+    # Get album tracks
+    tracks_url = f"https://api.spotify.com/v1/albums/{album_id}/tracks"
+    tracks_result = get(tracks_url, headers=headers)
+    tracks_json = json.loads(tracks_result.content)
     tracks = []
-    for item in json_result["items"]:
+    for item in tracks_json["items"]:
         track_info = {
             "track_name": item["name"],
             "track_number": item["track_number"]
         }
         tracks.append(track_info)
-    return tracks
 
+    # Return combined details
+    return {
+        "album_name": album_name,
+        "album_artist": album_artist,
+        "release_year": release_year,
+        "tracks": tracks
+    }
+
+# Example usage
 token = get_token()
 result = search_for_album(token, "since+i+left+you")
 album_id = result["id"]
-songs = get_album_tracks(token, album_id)
-print(songs)
+album_details = get_album_tracks_with_details(token, album_id)
+print(album_details)

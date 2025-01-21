@@ -63,6 +63,7 @@ def get_album_tracks_with_details(token, album_id):
     album_name = album_json["name"]
     album_artist = ", ".join(artist["name"] for artist in album_json["artists"])
     release_year = album_json["release_date"].split("-")[0]
+    cover_image = album_json["images"][0]["url"]
 
     # Get album tracks
     tracks_url = f"https://api.spotify.com/v1/albums/{album_id}/tracks"
@@ -81,6 +82,7 @@ def get_album_tracks_with_details(token, album_id):
         "album_name": album_name,
         "album_artist": album_artist,
         "release_year": release_year,
+        "cover_image": cover_image,
         "tracks": tracks
     }
 

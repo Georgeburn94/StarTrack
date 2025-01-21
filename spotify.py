@@ -46,7 +46,22 @@ def search_for_album(token, album_id):
     
     return json_result[0]
 
+def get_album_tracks(token, album_id):
+    url = f"https://api.spotify.com/v1/albums/{album_id}/tracks"
+    headers = get_auth_header(token)
+    result = get(url, headers=headers)
+    json_result = json.loads(result.content)
+    tracks = []
+    for item in json_result["items"]:
+        track_info = {
+            "track_name": item["name"],
+            "track_number": item["track_number"]
+        }
+        tracks.append(track_info)
+    return tracks
+
 token = get_token()
 result = search_for_album(token, "since+i+left+you")
-print(result["id"])
-
+album_id = result["id"]
+songs = get_album_tracks(token, album_id)
+print(songs)

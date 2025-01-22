@@ -1,12 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Artist, Album, Track, Review
+from .spotify_utility import get_token, search_for_album, get_album_tracks_with_details, parse_spotify_data_to_models
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 
-
+def fetch_album_details_view(request):
+    if request.method == 'POST':
+        album_id = request.POST.get('album_id')
+        token = get_token()
+        result = search_for_album(token, album_id)
+        if result:
+            album_id = result["id"]
+            album_details = get_album_tracks_with_details(token, album_id)
+            parsed_result = parse_spotify_data_to_models(album_details)
+            return JsonResponse({'success': True, 'message': parsed_result})
+        else:
+            return JsonResponse({'success': False, 'message': 'Album not found'})
+    return render(request, 'album_tracks.html')
 
 
 def home_page_view(request):

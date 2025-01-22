@@ -68,6 +68,18 @@
         </div>
 
         <!-- Albums Table -->
+
+        <form method="POST" action="{% url 'fetch_album_details' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="albumID" class="form-label">Album Name</label>
+              <input type="text" class="form-control" id="albumID" name="album_id" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Fetch Album Details</button>
+          </form>
+
+
+
         <div class="col-md-6">
             <div class="d-flex justify-content-between">
                 <h3>Albums</h3>

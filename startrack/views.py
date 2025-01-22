@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Artist, Album, Track, Review
-from .spotify_utility import get_token, search_for_album, get_album_tracks_with_details, parse_spotify_data_to_models
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+
+
 
 @login_required
 def fetch_album_details_view(request):

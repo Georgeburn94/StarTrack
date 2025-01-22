@@ -20,3 +20,42 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+
+// Fetch album details
+
+document.getElementById("fetchDetailsBtn").addEventListener("click", function () {
+  const albumID = document.getElementById("albumID").value;
+  const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+
+  // Get the fetch URL from the form's data attribute
+  const fetchUrl = document.getElementById("fetchAlbumForm").dataset.url;
+
+  fetch(fetchUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": csrfToken,
+    },
+    body: JSON.stringify({ album_id: albumID }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.error) {
+        alert(data.error);
+      } else {
+        // Populate modal with album details
+        document.getElementById("albumCover").src = data.cover_image;
+        document.getElementById("albumName").innerText = data.album_name;
+        document.getElementById("albumArtist").innerText = data.album_artist;
+        document.getElementById("releaseYear").innerText = data.release_year;
+
+        // Show the modal
+        new bootstrap.Modal(document.getElementById("albumDetailsModal")).show();
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching album details:", error);
+      alert("Something went wrong. Please try again.");
+    });
+});

@@ -7,19 +7,38 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 
+# def fetch_album_details_view(request):
+#     if request.method == 'POST':
+#         album_id = request.POST.get('album_id')
+#         token = get_token()
+#         result = search_for_album(token, album_id)
+#         if result:
+#             album_id = result["id"]
+#             album_details = get_album_tracks_with_details(token, album_id)
+#             parsed_result = parse_spotify_data_to_models(album_details)
+#             return redirect('home')
+#         else:
+#             return JsonResponse({'success': False, 'message': 'Album not found'})
+#     return render(request, 'album_tracks.html')
+
 def fetch_album_details_view(request):
-    if request.method == 'POST':
-        album_id = request.POST.get('album_id')
-        token = get_token()
-        result = search_for_album(token, album_id)
-        if result:
-            album_id = result["id"]
-            album_details = get_album_tracks_with_details(token, album_id)
-            parsed_result = parse_spotify_data_to_models(album_details)
-            return redirect('home')
-        else:
-            return JsonResponse({'success': False, 'message': 'Album not found'})
-    return render(request, 'album_tracks.html')
+    if request.method == "POST":
+        data = json.loads(request.body)
+        album_id = data.get("album_id")
+
+        try:
+            token = get_token()
+            result = search_for_album(token, album_id)
+            if not result:
+                return JsonResponse({"error": "Album not found."}, status=404)
+            
+            album_details = get_album_tracks_with_details(token, result["id"])
+            return JsonResponse(album_details)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request."}, status=400)
 
 
 def home_page_view(request):

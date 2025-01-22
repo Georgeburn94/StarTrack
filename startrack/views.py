@@ -7,39 +7,23 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 
-# def fetch_album_details_view(request):
-#     if request.method == 'POST':
-#         album_id = request.POST.get('album_id')
-#         token = get_token()
-#         result = search_for_album(token, album_id)
-#         if result:
-#             album_id = result["id"]
-#             album_details = get_album_tracks_with_details(token, album_id)
-#             parsed_result = parse_spotify_data_to_models(album_details)
-#             return redirect('home')
-#         else:
-#             return JsonResponse({'success': False, 'message': 'Album not found'})
-#     return render(request, 'album_tracks.html')
-
+@login_required
 def fetch_album_details_view(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         data = json.loads(request.body)
-        album_id = data.get("album_id")
-
-        try:
+        album_id = data.get('album_id')
+        if album_id:
             token = get_token()
             result = search_for_album(token, album_id)
-            if not result:
-                return JsonResponse({"error": "Album not found."}, status=404)
-            
-            album_details = get_album_tracks_with_details(token, result["id"])
-            return JsonResponse(album_details)
-
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Invalid request."}, status=400)
-
+            if result:
+                album_id = result["id"]
+                album_details = get_album_tracks_with_details(token, album_id)
+                return JsonResponse(album_details)
+            else:
+                return JsonResponse({'error': 'Album not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'No album ID provided'}, status=400)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def home_page_view(request):
     search_query = request.GET.get('search', '')
@@ -60,13 +44,16 @@ def add_artist_view(request):
 @login_required
 def add_album_view(request):
     if request.method == 'POST':
-        name = request.POST.get('name')
-        year = request.POST.get('year')
-        artist_id = request.POST.get('artist')
-        artist = get_object_or_404(Artist, pk=artist_id)
-        Album.objects.create(name=name, year=year, artist=artist)
-        return redirect('artist_albums', artist_id=artist.artistID)
-    return render(request, 'home.html')
+        data = json.loads(request.body)
+        name = data.get('name')
+        artist_name = data.get('artist')
+        year = data.get('year')
+        cover_image = data.get('cover_image')
+
+        artist, created = Artist.objects.get_or_create(name=artist_name)
+        Album.objects.create(name=name, year=year, artist=artist, featured_image=cover_image)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
 
 def album_tracks_view(request, album_id):
     album = get_object_or_404(Album, pk=album_id)

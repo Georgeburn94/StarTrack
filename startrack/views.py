@@ -10,17 +10,14 @@ import json
 @login_required
 def fetch_album_details_view(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        album_id = data.get('album_id')
-        if album_id:
-            token = get_token()
-            result = search_for_album(token, album_id)
-            if result:
-                album_id = result["id"]
-                album_details = get_album_tracks_with_details(token, album_id)
-                return JsonResponse(album_details)
-            else:
-                return JsonResponse({'error': 'Album not found'}, status=404)
+        album_id = request.POST.get('album_id')
+        token = get_token()
+        result = search_for_album(token, album_id)
+        if result:
+            album_id = result["id"]
+            album_details = get_album_tracks_with_details(token, album_id)
+            parsed_result = parse_spotify_data_to_models(album_details)
+            return JsonResponse({'success': True, 'message': parsed_result})
         else:
             return JsonResponse({'error': 'No album ID provided'}, status=400)
     return JsonResponse({'error': 'Invalid request'}, status=400)

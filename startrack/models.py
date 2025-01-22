@@ -6,7 +6,7 @@ from cloudinary.models import CloudinaryField
 # Create your models here.
 class Artist(models.Model):
     artistID = models.AutoField(primary_key=True)  # Primary Key
-    name = models.CharField(max_length=255)  # Name of the artist
+    name = models.CharField(max_length=255, unique=True)  # Name of the artist
     # Albums will be linked through a ForeignKey in the Album model
 
 class Album(models.Model):

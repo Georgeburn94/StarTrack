@@ -16,7 +16,7 @@ def fetch_album_details_view(request):
             album_id = result["id"]
             album_details = get_album_tracks_with_details(token, album_id)
             parsed_result = parse_spotify_data_to_models(album_details)
-            return JsonResponse({'success': True, 'message': parsed_result})
+            return redirect('home')
         else:
             return JsonResponse({'success': False, 'message': 'Album not found'})
     return render(request, 'album_tracks.html')

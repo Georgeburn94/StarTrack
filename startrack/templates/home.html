@@ -69,14 +69,37 @@
 
         <!-- Albums Table -->
 
-        <form method="POST" action="{% url 'fetch_album_details' %}">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label for="albumID" class="form-label">Album Name</label>
-              <input type="text" class="form-control" id="albumID" name="album_id" required>
+<!-- Fetch Album Details Form -->
+<form id="fetchAlbumForm">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="albumID" class="form-label">Album Name</label>
+        <input type="text" class="form-control" id="albumID" name="album_id" required>
+    </div>
+    <button type="button" class="btn btn-primary" id="fetchDetailsBtn">Fetch Album Details</button>
+</form>
+
+<!-- Album Details Modal -->
+<div class="modal fade" id="albumDetailsModal" tabindex="-1" aria-labelledby="albumDetailsLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="albumDetailsLabel">Album Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <button type="submit" class="btn btn-primary">Fetch Album Details</button>
-          </form>
+            <div class="modal-body">
+                <img id="albumCover" class="img-fluid mb-3" alt="Album Cover">
+                <p><strong>Name:</strong> <span id="albumName"></span></p>
+                <p><strong>Artist:</strong> <span id="albumArtist"></span></p>
+                <p><strong>Release Year:</strong> <span id="releaseYear"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmAddAlbumBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

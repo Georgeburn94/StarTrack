@@ -101,6 +101,16 @@ def get_album_tracks_with_details(token, album_id):
         "tracks": tracks
     }
 
+# Example usage
+token = get_token()
+result = search_for_album(token, "since+i+left+you")
+album_id = result["id"]
+album_details = get_album_tracks_with_details(token, album_id)
+print(album_details)
+
+# Parse Spotify data to models
+
+
 def parse_spotify_data_to_models(spotify_data):
     # Extract album details
     album_name = spotify_data["album_name"]
@@ -110,7 +120,7 @@ def parse_spotify_data_to_models(spotify_data):
     tracks = spotify_data["tracks"]
 
     # Create or get the Artist instance
-    artist, created = Artist.objects.get_or_create(name=album_artist_name)
+    artist = Artist.objects.create(name=album_artist_name)
 
     # Create the Album instance and link it to the artist
     album = Album.objects.create(
@@ -130,12 +140,5 @@ def parse_spotify_data_to_models(spotify_data):
     return f"Album '{album_name}' by {album_artist_name} with {len(tracks)} tracks added successfully!"
 
 # Example usage
-if __name__ == "__main__":
-    token = get_token()
-    result = search_for_album(token, "since+i+left+you")
-    album_id = result["id"]
-    album_details = get_album_tracks_with_details(token, album_id)
-    print(album_details)
-
-    parsed_result = parse_spotify_data_to_models(album_details)
-    print(parsed_result)
+parsed_result = parse_spotify_data_to_models(album_details)
+print(parsed_result)

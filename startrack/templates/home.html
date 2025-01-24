@@ -8,17 +8,11 @@
 
     {% if user.is_authenticated %}
     <!-- Fetch Album Details Form -->
-    <div class="row">
-        <div class="col-12">
-            <form method="POST" action="{% url 'fetch_album_details' %}">
-                {% csrf_token %}
-                <div class="input-group mb-4">
-                    <input type="text" class="form-control" id="albumID" name="album_id" placeholder="Search Spotify for albums..." required>
-                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>                       
-                </div>
-            </form>
-        </div>
-    </div>
+<!-- Button trigger modal -->
+
+
+  <!-- Modal -->
+
 
     <!-- Albums Section -->
 
@@ -37,7 +31,12 @@
         </div>
     </div> -->
     <div class="row">
+        <div class="d-flex justify-content-between">
         <h3>Your Albums</h3>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#spotifySearchModal">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+        </div>
     </div>
 
     <!-- Albums Grid -->
@@ -136,12 +135,35 @@
 
 
 </div>
+
+
+
+
+
 <!-- Modals -->
 
 
 
+<!-- Spotify Search Modal -->
 
-
+<div class="modal fade" id="spotifySearchModal" tabindex="-1" aria-labelledby="spotifySearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form method="POST" action="{% url 'fetch_album_details' %}">
+                {% csrf_token %}
+                <div class="input-group mb-4">
+                    <input type="text" class="form-control" id="albumID" name="album_id" placeholder="Search Spotify for albums..." required>
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>                       
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!-- Add Artist Modal -->
 

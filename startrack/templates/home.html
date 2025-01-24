@@ -35,180 +35,189 @@
                     <i class="fa-solid fa-plus"></i>
                 </button>
             </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Album Name</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Artist</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for artist in artists %}
-                    {% for album in artist.albums.all %}
-                    <tr>
-                        <td><a href="{% url 'album_tracks' album.albumID %}">{{ album.name }}</a></td>
-                        <td>{{ album.year }}</td>
-                        <td>{{ artist.name }}</td>
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-
-
-
-        <!-- Artists Section -->
-
-
-
-
-
-        <!-- Add Artist Button -->
-        <div class="col-md-6">
-            <div class="d-flex justify-content-between mb-3">
-                <h3>Artists</h3>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-            <div>
-                <!-- Artist Search Bar -->
-                <form method="GET" action="{% url 'home' %}" class="mb-4">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control" placeholder="Search for artists..."
-                            value="{{ request.GET.search }}">
-                        <button class="btn btn-primary" type="submit">Search</button>
-                    </div>
-                </form>
-            </div>
-            <!-- Artists Table -->
-            <div>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">Artist Name</th>
-                            <th scope="col">Albums</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for artist in artists %}
-                        <tr>
-                            <td><a href="{% url 'artist_albums' artist.artistID %}">{{ artist.name }}</a></td>
-                            <td>
-                                <ul>
-                                    {% for album in artist.albums.all %}
-                                    <li>{{ album.name }} ({{ album.year }})</li>
-                                    {% endfor %}
-                                </ul>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 
+    <div class="row mt-4">
 
+        {% for artist in artists %}
 
+        {% for album in artist.albums.all %}
 
-
-
-
-
-
-
-    <!-- Modals -->
-
-
-
-
-
-
-    <!-- Add Artist Modal -->
-
-    <div class="modal fade" id="addArtistModal" tabindex="-1" aria-labelledby="addArtistModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addArtistModalLabel">Add Artist</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{% url 'add_artist' %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="artistName" class="form-label">Artist Name</label>
-                            <input type="text" class="form-control" id="artistName" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="artistBio" class="form-label">Artist Bio</label>
-                            <textarea class="form-control" id="artistBio" name="bio" rows="3" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Artist</button>
-                    </form>
+        <div class="col-md-3 mb-4">
+            <div class="card text-bg-dark" style="width: 18rem;">
+                <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art">
+                <div class="card-body">
+                    <h5 class="card-title">{{ album.name }}
+                        <h6 class="card-subtitle">{{ artist.name}}</h6>
+                        <h6><small>{{ album.year }}</small></h6>
                 </div>
             </div>
         </div>
+
+
+
+        {% endfor %}
+        {% endfor %}
     </div>
-
-    <!-- Add Album Modal -->
-
-    <div class="modal fade" id="addAlbumModal" tabindex="-1" aria-labelledby="addAlbumModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addAlbumModalLabel">Add Album</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{% url 'add_album' %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="albumName" class="form-label">Album Name</label>
-                            <input type="text" class="form-control" id="albumName" name="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="albumYear" class="form-label">Release Year</label>
-                            <input type="number" class="form-control" id="albumYear" name="year" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="albumArtist" class="form-label">Artist</label>
-                            <select class="form-control" id="albumArtist" name="artist" required>
-                                {% for artist in artists %}
-                                <option value="{{ artist.artistID }}">{{ artist.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Album</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-    <!-- Not logged in Message -->
-
-
-
-
-
-
-    {% else %}
-    <div class="container text-center">
-        <h2>Welcome to the Music Library</h2>
-        <p>Sign in or register to access your music library.</p>
-        <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
-        <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
-    </div>
-    {% endif %}
 </div>
 
+
+
+
+
+
+
+
+<!-- Artists Section -->
+
+
+
+
+
+<!-- Add Artist Button -->
+<div class="col-md-6">
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Artists</h3>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+    </div>
+    <div>
+        <!-- Artist Search Bar -->
+        <form method="GET" action="{% url 'home' %}" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search for artists..."
+                    value="{{ request.GET.search }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+    <!-- Artists Table -->
+    <div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Artist Name</th>
+                    <th scope="col">Albums</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for artist in artists %}
+                <tr>
+                    <td><a href="{% url 'artist_albums' artist.artistID %}">{{ artist.name }}</a></td>
+                    <td>
+                        <ul>
+                            {% for album in artist.albums.all %}
+                            <li>{{ album.name }} ({{ album.year }})</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<!-- Modals -->
+
+
+
+
+
+
+<!-- Add Artist Modal -->
+
+<div class="modal fade" id="addArtistModal" tabindex="-1" aria-labelledby="addArtistModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addArtistModalLabel">Add Artist</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'add_artist' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="artistName" class="form-label">Artist Name</label>
+                        <input type="text" class="form-control" id="artistName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="artistBio" class="form-label">Artist Bio</label>
+                        <textarea class="form-control" id="artistBio" name="bio" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Artist</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Album Modal -->
+
+<div class="modal fade" id="addAlbumModal" tabindex="-1" aria-labelledby="addAlbumModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAlbumModalLabel">Add Album</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'add_album' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="albumName" class="form-label">Album Name</label>
+                        <input type="text" class="form-control" id="albumName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="albumYear" class="form-label">Release Year</label>
+                        <input type="number" class="form-control" id="albumYear" name="year" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="albumArtist" class="form-label">Artist</label>
+                        <select class="form-control" id="albumArtist" name="artist" required>
+                            {% for artist in artists %}
+                            <option value="{{ artist.artistID }}">{{ artist.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Album</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Not logged in Message -->
+
+
+
+
+
+
+{% else %}
+<div class=row>
+    <h2>Welcome to the Music Library</h2>
+    <p>Sign in or register to access your music library.</p>
+    <a href="{% url 'account_login' %}" class="btn btn-primary">Login</a>
+    <a href="{% url 'account_signup' %}" class="btn btn-secondary">Register</a>
+</div>
+{% endif %}
+
+</div>
 {% endblock %}

@@ -45,14 +45,16 @@
         {% for album in artist.albums.all %}
 
         <div class="col-md-3 mb-4">
-            <div class="card text-bg-dark" style="width: 18rem;">
-                <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art">
-                <div class="card-body">
-                    <h5 class="card-title">{{ album.name }}
-                        <h6 class="card-subtitle">{{ artist.name}}</h6>
-                        <h6><small>{{ album.year }}</small></h6>
+            <a href="{% url 'album_tracks' album.albumID %}">
+                <div class="card text-bg-dark" style="width: 18rem;">
+                    <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ album.name }}
+                            <h6 class="card-subtitle">{{ artist.name}}</h6>
+                            <h6><small>{{ album.year }}</small></h6>
+                    </div>
                 </div>
-            </div>
+            </a>
         </div>
 
 

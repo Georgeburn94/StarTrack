@@ -13,9 +13,8 @@
             <form method="POST" action="{% url 'fetch_album_details' %}">
                 {% csrf_token %}
                 <div class="input-group mb-4">
-                    <label for="albumID" class="form-label">Album Name</label>
-                    <input type="text" class="form-control" id="albumID" name="album_id" required>
-                    <button type="submit" class="btn btn-primary">Fetch Album Details</button>
+                    <input type="text" class="form-control" id="albumID" name="album_id" placeholder="Search Spotify for albums..." required>
+                    <button type="submit" class="btn btn-success"><i class="fa-solid fa-plus"></i></button>                       
                 </div>
             </form>
         </div>
@@ -27,7 +26,7 @@
 
 
     <!-- Add Album Button -->
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between">
                 <h3>Your Albums</h3>
@@ -36,7 +35,12 @@
                 </button>
             </div>
         </div>
+    </div> -->
+    <div class="row">
+        <h3>Your Albums</h3>
     </div>
+
+    <!-- Albums Grid -->
 
     <div class="row mt-4">
 
@@ -44,7 +48,7 @@
 
         {% for album in artist.albums.all %}
 
-        <div class="col-md-3 mb-4">
+        <div class="col-md-3 mb-4 col-sm-6">
             <a href="{% url 'album_tracks' album.albumID %}">
                 <div class="card text-bg-dark" style="width: 18rem;">
                     <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art">
@@ -62,76 +66,76 @@
         {% endfor %}
         {% endfor %}
     </div>
+
+
+
+
+
+
+
+
+
+    <!-- Artists Section -->
+
+
+
+
+
+    <!-- Add Artist Button -->
+    <div class="col-12">
+        <div class="d-flex justify-content-between mb-3">
+            <h3>Artists</h3>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+        <div>
+            <!-- Artist Search Bar -->
+            <form method="GET" action="{% url 'home' %}" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Search for artists..."
+                        value="{{ request.GET.search }}">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
+        </div>
+        <!-- Artists Table -->
+        <div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Artist Name</th>
+                        <th scope="col">Albums</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for artist in artists %}
+                    <tr>
+                        <td><a href="{% url 'artist_albums' artist.artistID %}">{{ artist.name }}</a></td>
+                        <td>
+                            <ul>
+                                {% for album in artist.albums.all %}
+                                <li>{{ album.name }} ({{ album.year }})</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
 </div>
-
-
-
-
-
-
-
-
-<!-- Artists Section -->
-
-
-
-
-
-<!-- Add Artist Button -->
-<div class="col-md-6">
-    <div class="d-flex justify-content-between mb-3">
-        <h3>Artists</h3>
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
-            <i class="fa-solid fa-plus"></i>
-        </button>
-    </div>
-    <div>
-        <!-- Artist Search Bar -->
-        <form method="GET" action="{% url 'home' %}" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Search for artists..."
-                    value="{{ request.GET.search }}">
-                <button class="btn btn-primary" type="submit">Search</button>
-            </div>
-        </form>
-    </div>
-    <!-- Artists Table -->
-    <div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Artist Name</th>
-                    <th scope="col">Albums</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for artist in artists %}
-                <tr>
-                    <td><a href="{% url 'artist_albums' artist.artistID %}">{{ artist.name }}</a></td>
-                    <td>
-                        <ul>
-                            {% for album in artist.albums.all %}
-                            <li>{{ album.name }} ({{ album.year }})</li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
 <!-- Modals -->
 
 

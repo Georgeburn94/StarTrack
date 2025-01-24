@@ -8,27 +8,65 @@
 
     {% if user.is_authenticated %}
     <!-- Fetch Album Details Form -->
-    <form method="POST" action="{% url 'fetch_album_details' %}">
-        {% csrf_token %}
-        <div class="input-group mb-4">
-            <label for="albumID" class="form-label">Album Name</label>
-            <input type="text" class="form-control" id="albumID" name="album_id" required>
-            <button type="submit" class="btn btn-primary">Fetch Album Details</button>
-        </div>
-    </form>
-
-
-
-
-
-    <!-- Artists Section -->
-
-
-
-
-
-    <!-- Add Artist Button -->
     <div class="row">
+        <div class="col-12">
+            <form method="POST" action="{% url 'fetch_album_details' %}">
+                {% csrf_token %}
+                <div class="input-group mb-4">
+                    <label for="albumID" class="form-label">Album Name</label>
+                    <input type="text" class="form-control" id="albumID" name="album_id" required>
+                    <button type="submit" class="btn btn-primary">Fetch Album Details</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Albums Section -->
+
+
+
+
+    <!-- Add Album Button -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between">
+                <h3>Your Albums</h3>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Album Name</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Artist</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for artist in artists %}
+                    {% for album in artist.albums.all %}
+                    <tr>
+                        <td><a href="{% url 'album_tracks' album.albumID %}">{{ album.name }}</a></td>
+                        <td>{{ album.year }}</td>
+                        <td>{{ artist.name }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+        <!-- Artists Section -->
+
+
+
+
+
+        <!-- Add Artist Button -->
         <div class="col-md-6">
             <div class="d-flex justify-content-between mb-3">
                 <h3>Artists</h3>
@@ -72,47 +110,12 @@
                 </table>
             </div>
         </div>
-
-
-
-
-
-        <!-- Albums Section -->
-
-
-
-
-        <!-- Add Album Button -->
-
-        <div class="col-md-6">
-            <div class="d-flex justify-content-between">
-                <h3>Albums</h3>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Album Name</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Artist</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for artist in artists %}
-                    {% for album in artist.albums.all %}
-                    <tr>
-                        <td><a href="{% url 'album_tracks' album.albumID %}">{{ album.name }}</a></td>
-                        <td>{{ album.year }}</td>
-                        <td>{{ artist.name }}</td>
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
     </div>
+
+
+
+
+
 
 
 

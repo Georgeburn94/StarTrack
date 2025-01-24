@@ -34,7 +34,7 @@
     <!-- Albums Header -->
     <div class="row">
         <div class="d-flex justify-content-between">
-            <h3>Your Albums</h3>
+            <h3 class="lato-bold">Your Albums</h3>
             <!-- Spotify Search Button -->
             <button type="button" class="btn btn-dark btn-outline" data-bs-toggle="modal"
                 data-bs-target="#spotifySearchModal">
@@ -56,9 +56,9 @@
                 <div class="card text-bg-dark" style="width: 18rem;">
                     <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art">
                     <div class="card-body">
-                        <h5 class="card-title">{{ album.name }}
-                            <h6 class="card-subtitle">{{ artist.name}}</h6>
-                            <h6><small>{{ album.year }}</small></h6>
+                        <h5 class="card-title lato-bold">{{ album.name }}
+                            <h6 class="card-subtitle lato-regular">{{ artist.name}}</h6>
+                            <h6 class="lato-regular"><small>{{ album.year }}</small></h6>
                     </div>
                 </div>
             </a>
@@ -87,7 +87,7 @@
     <!-- Add Artist Button -->
     <div class="col-12">
         <div class="d-flex justify-content-between mb-3">
-            <h3>Artists</h3>
+            <h3 class="lato-bold">Artists</h3>
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
                 <i class="fa-solid fa-plus"></i>
             </button>
@@ -155,6 +155,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <h5 class="modal-title text-center" id="spotifySearchModalLabel">Search Spotify</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

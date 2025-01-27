@@ -36,12 +36,13 @@
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Search for artists..."
                     value="{{ request.GET.search }}">
-                <button class="btn btn-dark btn-outline" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button class="btn btn-dark btn-outline" type="submit"><i
+                        class="fa-solid fa-magnifying-glass"></i></button>
             </div>
         </form>
     </div>
 
-    
+
     <!-- Albums Header -->
     <div class="row">
         <div class="d-flex justify-content-between">
@@ -100,11 +101,12 @@
     <div class="col-12">
         <div class="d-flex justify-content-between mb-3">
             <h3 class="lato-bold">Artists</h3>
-            <button type="button" class="btn btn-dark btn-outline" data-bs-toggle="modal" data-bs-target="#addArtistModal">
+            <!-- <button type="button" class="btn btn-dark btn-outline" data-bs-toggle="modal"
+                data-bs-target="#addArtistModal">
                 <i class="fa-solid fa-plus"></i>
-            </button>
+            </button> -->
         </div>
-        <!-- Artist Search Bar -->
+
 
         <!-- Artists Table -->
         <div>
@@ -133,7 +135,7 @@
                 </tbody>
             </table>
             {% else %}
-            <p class="text-center" id="no_artists_text">You have no artists in your library.</p>
+            <p class="text-center" id="no_albums_text">You have no artists in your library.</p>
             {% endif %}
         </div>
     </div>

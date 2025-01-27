@@ -111,3 +111,9 @@ def upload_album_image_view(request, album_id):
             return JsonResponse({'success': True})
         return JsonResponse({'success': False, 'error': 'No image URL provided'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@login_required
+def delete_album_view(request, album_id):
+    album = get_object_or_404(Album, pk=album_id)
+    album.delete()
+    return redirect('home')

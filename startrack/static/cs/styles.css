@@ -101,3 +101,10 @@ a {
     align-items: center;
     height: 100%;
 }
+
+#no_albums_text {
+    margin-top: 5rem;
+    font-size: 1.5rem;
+    margin-bottom: 5rem;
+    color: #3f3f3f;
+}

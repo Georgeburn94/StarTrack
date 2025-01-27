@@ -1,0 +1,103 @@
+/* Google Fonts Classes */
+
+.lato-thin {
+    font-family: "Lato", serif;
+    font-weight: 100;
+    font-style: normal;
+}
+
+.lato-light {
+    font-family: "Lato", serif;
+    font-weight: 300;
+    font-style: normal;
+}
+
+.lato-regular {
+    font-family: "Lato", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.lato-bold {
+    font-family: "Lato", serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.lato-black {
+    font-family: "Lato", serif;
+    font-weight: 900;
+    font-style: normal;
+}
+
+.lato-thin-italic {
+    font-family: "Lato", serif;
+    font-weight: 100;
+    font-style: italic;
+}
+
+.lato-light-italic {
+    font-family: "Lato", serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+.lato-regular-italic {
+    font-family: "Lato", serif;
+    font-weight: 400;
+    font-style: italic;
+}
+
+.lato-bold-italic {
+    font-family: "Lato", serif;
+    font-weight: 700;
+    font-style: italic;
+}
+
+.lato-black-italic {
+    font-family: "Lato", serif;
+    font-weight: 900;
+    font-style: italic;
+}
+
+.gowun-dodum-regular {
+    font-family: "Gowun Dodum", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Stars Styling */
+
+.star-rating .fa-star {
+    font-size: 24px;
+    color: #ddd;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.star-rating .fa-star.checked {
+    color: #f39c12;
+    opacity: 1;
+}
+
+/* General Styles */
+
+li {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+#albumDetails {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

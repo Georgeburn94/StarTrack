@@ -120,3 +120,8 @@ def delete_album_view(request, album_id):
     album.delete()
     messages.warning(request, 'Album deleted.')
     return redirect('home')
+
+@login_required
+def artist_list_view(request):
+    artists = Artist.objects.all()
+    return render(request, 'artist_list.html', {'artists': artists})

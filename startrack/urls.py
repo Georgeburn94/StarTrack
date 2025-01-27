@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import home_page_view, add_artist_view, add_album_view, album_tracks_view, artist_albums_view, add_rating_view, add_track_view, delete_track_view, review_feed_view, upload_album_image_view, fetch_album_details_view, delete_album_view
+from .views import home_page_view, add_artist_view, add_album_view, album_tracks_view, artist_albums_view, add_rating_view, add_track_view, delete_track_view, review_feed_view, upload_album_image_view, fetch_album_details_view, delete_album_view, artist_list_view
 from django.contrib import admin
 from . import views
 
@@ -18,4 +18,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('album/<int:album_id>/upload-image/', upload_album_image_view, name='upload_album_image'),
     path('fetch-album-details/', views.fetch_album_details_view, name='fetch_album_details'),
+    path('artist_list/', artist_list_view, name='artist_list'),
 ]

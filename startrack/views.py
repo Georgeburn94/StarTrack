@@ -24,12 +24,14 @@ def fetch_album_details_view(request):
 
 
 def home_page_view(request):
-    search_query = request.GET.get('search', '')
+    search_query = request.GET.get('search', '').strip()  # Strip any extra spaces
     if search_query:
         artists = Artist.objects.filter(name__icontains=search_query)
+        albums = Album.objects.filter(name__icontains=search_query) | Album.objects.filter(artist__name__icontains=search_query)
     else:
         artists = Artist.objects.all()
-    return render(request, 'home.html', {'artists': artists})
+        albums = Album.objects.all()
+    return render(request, 'home.html', {'artists': artists, 'albums': albums})
 
 def add_artist_view(request):
     if request.method == 'POST':

@@ -43,32 +43,29 @@
         </div>
     </div>
 
-    <!-- Albums Grid -->
-
-    <div class="row mt-4">
-
-        {% for artist in artists %}
-
-        {% for album in artist.albums.all %}
-
-        <div class="col-md-3 mb-4 col-sm-6">
-            <a href="{% url 'album_tracks' album.albumID %}">
-                <div class="card text-bg-dark" style="width: 18rem;">
-                    <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art">
-                    <div class="card-body">
-                        <h5 class="card-title lato-bold">{{ album.name }}
-                            <h6 class="card-subtitle lato-regular">{{ artist.name}}</h6>
+<!-- Albums Grid -->
+<div class="row mt-4">
+    {% if albums %}
+        {% for album in albums %}
+            <div class="col-md-3 mb-4 col-sm-6">
+                <a href="{% url 'album_tracks' album.albumID %}">
+                    <div class="card text-bg-dark" style="width: 18rem;">
+                        <img src="{{ album.featured_image }}" class="card-img-top" alt="{{ album.name }} cover art">
+                        <div class="card-body">
+                            <h5 class="card-title lato-bold">{{ album.name }}</h5>
+                            <h6 class="card-subtitle lato-regular">{{ album.artist.name }}</h6>
                             <h6 class="lato-regular"><small>{{ album.year }}</small></h6>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <p class="text-center">You have no albums in your library.</p>
         </div>
-
-
-
-        {% endfor %}
-        {% endfor %}
-    </div>
+    {% endif %}
+</div>
 
 
 
@@ -114,7 +111,8 @@
                 <tbody>
                     {% for artist in artists %}
                     <tr>
-                        <td><strong><a href="{% url 'artist_albums' artist.artistID %}">{{ artist.name }}</a></strong></td>
+                        <td><strong><a href="{% url 'artist_albums' artist.artistID %}">{{ artist.name }}</a></strong>
+                        </td>
                         <td>
                             <ul>
                                 {% for album in artist.albums.all %}

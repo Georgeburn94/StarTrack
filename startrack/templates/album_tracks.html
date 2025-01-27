@@ -53,45 +53,47 @@
   }, false);
 </script>
 
-<!-- Album Details -->
-<div class="card mb-3 mt-4 mx-4 shadow">
-  <div class="row g-0">
-    <div class="col-md-4">
-      <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art"
-        style="max-width: 18rem;">
-    </div>
-    <div class="col-md-8">
-      <div class="card-body d-flex flex-column justify-content-center align-items-center" id="albumDetails">
-        <h3 class="card-title">{{ album.name }}</h3>
-        <h4 class="card-text">{{ album.artist.name }}</h4>
-        <p class="card-text"><small class="text-body-secondary">{{ album.year }}</small></p>
-        <div>
-          <button id="upload_widget" class="btn btn-primary"><i class="fa-solid fa-upload"></i></button>
-          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTrackModal">
-            <i class="fa-solid fa-plus"></i> </button>
-          <!-- Delete Album Button -->
-          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAlbumModal">
-            Delete Album
-          </button>
 
-          <!-- Delete Album Modal -->
-          <div class="modal fade" id="deleteAlbumModal" tabindex="-1" aria-labelledby="deleteAlbumModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="deleteAlbumModalLabel">Confirm Delete</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  Are you sure you want to delete this album?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                  <form method="POST" action="{% url 'delete_album' album.albumID %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                  </form>
+<div class="container-fluid">
+  <!-- Album Details -->
+  <div class="card mb-3 mt-4 mx-4 shadow">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{ album.featured_image }}" class="card-img-top" alt="{ album.name } cover art"
+          style="max-width: 18rem;">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body d-flex flex-column justify-content-center align-items-center" id="albumDetails">
+          <h3 class="card-title">{{ album.name }}</h3>
+          <h4 class="card-text">{{ album.artist.name }}</h4>
+          <p class="card-text"><small class="text-body-secondary">{{ album.year }}</small></p>
+          <div>
+            <button id="upload_widget" class="btn btn-primary"><i class="fa-solid fa-upload"></i></button>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTrackModal">
+              <i class="fa-solid fa-plus"></i> </button>
+            <!-- Delete Album Button -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAlbumModal">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            <!-- Delete Album Modal -->
+            <div class="modal fade" id="deleteAlbumModal" tabindex="-1" aria-labelledby="deleteAlbumModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteAlbumModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    Are you sure you want to delete this album?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <form method="POST" action="{% url 'delete_album' album.albumID %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -100,84 +102,88 @@
       </div>
     </div>
   </div>
-</div>
 
 
 
 
-<!-- Track Table -->
+  <!-- Track Table -->
 
-<div class="row">
-  <table class="table table-striped mx-4 mt-4 shadow">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Track Name</th>
-        <th scope="col">Rating</th>
-        <th scope="col">Review</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for track in tracks %}
-      <tr>
-        <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ track.name }}</td>
-        <td>
-          <div class="star-rating" data-rating="{{ track.review.star_rating|default:0 }}">
-            <!-- Stars will be inserted here by JavaScript -->
-          </div>
-        </td>
-        <td>{{ track.review.note|default:"No notes" }}</td>
-        <td>
-          <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-dark btn-outline mx-2" data-bs-toggle="modal"
-              data-bs-target="#addRatingModal{{ track.trackID }}">
-              <i class="fa-solid fa-pencil"></i>
-            </button>
-            <!-- <form method="POST" action="{% url 'delete_track' track.trackID %}">
+
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Track Name</th>
+              <th scope="col">Rating</th>
+              <th scope="col">Review</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for track in tracks %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ track.name }}</td>
+              <td>
+                <div class="star-rating" data-rating="{{ track.review.star_rating|default:0 }}">
+                  <!-- Stars will be inserted here by JavaScript -->
+                </div>
+              </td>
+              <td>{{ track.review.note|default:"No notes" }}</td>
+              <td>
+                <div class="d-flex justify-content-end">
+                  <button type="button" class="btn btn-dark btn-outline mx-2" data-bs-toggle="modal"
+                    data-bs-target="#addRatingModal{{ track.trackID }}">
+                    <i class="fa-solid fa-pencil"></i>
+                  </button>
+                  <!-- <form method="POST" action="{% url 'delete_track' track.trackID %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button> -->
-            </form>
-          </div>
-        </td>
-      </tr>
-
-</div>
-
-<!-- Add Rating Modal -->
-<div class="modal fade" id="addRatingModal{{ track.trackID }}" tabindex="-1"
-  aria-labelledby="addRatingModalLabel{{ track.trackID }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{
-          track.name }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" action="{% url 'add_rating' track.trackID %}">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="starRating{{ track.trackID }}" class="form-label">Rating</label>
-            <input type="number" class="form-control" id="starRating{{ track.trackID }}" name="star_rating" min="1"
-              max="5" required>
-          </div>
-          <div class="mb-3">
-            <label for="note{{ track.trackID }}" class="form-label">Note</label>
-            <textarea class="form-control" id="note{{ track.trackID }}" name="note" rows="2"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Submit Rating</button>
-        </form>
+                  </form>
+                </div>
+              </td>
+            </tr>
       </div>
     </div>
   </div>
-</div>
-{% endfor %}
-</tbody>
-</table>
-<a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
-</div>
+
+
+  <!-- Add Rating Modal -->
+  <div class="modal fade" id="addRatingModal{{ track.trackID }}" tabindex="-1"
+    aria-labelledby="addRatingModalLabel{{ track.trackID }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addRatingModalLabel{{ track.trackID }}">Add Rating for {{
+            track.name }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'add_rating' track.trackID %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="starRating{{ track.trackID }}" class="form-label">Rating</label>
+              <input type="number" class="form-control" id="starRating{{ track.trackID }}" name="star_rating" min="1"
+                max="5" required>
+            </div>
+            <div class="mb-3">
+              <label for="note{{ track.trackID }}" class="form-label">Note</label>
+              <textarea class="form-control" id="note{{ track.trackID }}" name="note" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Rating</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  </tbody>
+  </table>
+  <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
+
 
 <!-- Add Track Modal -->
 <div class="modal fade" id="addTrackModal" tabindex="-1" aria-labelledby="addTrackModalLabel" aria-hidden="true">
@@ -199,5 +205,6 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 {% endblock %}

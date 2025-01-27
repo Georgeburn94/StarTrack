@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Artist, Album, Track, Review
 from .spotify_utility import get_token, search_for_album, get_album_tracks_with_details, parse_spotify_data_to_models
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
@@ -46,7 +47,8 @@ def add_album_view(request):
         artist_id = request.POST.get('artist')
         artist = get_object_or_404(Artist, pk=artist_id)
         Album.objects.create(name=name, year=year, artist=artist)
-        return redirect('artist_albums', artist_id=artist.artistID)
+        messages.success(request, 'Album created successfully.')
+        return redirect('home')
     return render(request, 'home.html')
 
 def album_tracks_view(request, album_id):
@@ -116,4 +118,5 @@ def upload_album_image_view(request, album_id):
 def delete_album_view(request, album_id):
     album = get_object_or_404(Album, pk=album_id)
     album.delete()
+    messages.warning(request, 'Album deleted.')
     return redirect('home')

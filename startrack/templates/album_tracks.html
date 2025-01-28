@@ -55,6 +55,8 @@
 
 
 <div class="container-fluid">
+
+
   <!-- Album Details -->
   <div class="card mb-3 mt-4 mx-4 shadow">
     <div class="row g-0">
@@ -93,6 +95,8 @@
                       {% csrf_token %}
                       <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
+                    </tbody>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -102,6 +106,7 @@
       </div>
     </div>
   </div>
+
 
 
 
@@ -180,30 +185,32 @@
     </div>
   </div>
   {% endfor %}
-  </tbody>
-  </table>
-  <a href="{% url 'home' %}" class="btn btn-primary mt-4">Back to Home</a>
 
 
-<!-- Add Track Modal -->
-<div class="modal fade" id="addTrackModal" tabindex="-1" aria-labelledby="addTrackModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addTrackModalLabel">Add Track</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="POST" action="{% url 'add_track' album.albumID %}">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="trackName" class="form-label">Track Name</label>
-            <input type="text" class="form-control" id="trackName" name="name" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Add Track</button>
-        </form>
+
+
+  <!-- Add Track Modal -->
+  <div class="modal fade" id="addTrackModal" tabindex="-1" aria-labelledby="addTrackModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addTrackModalLabel">Add Track</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'add_track' album.albumID %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="trackName" class="form-label">Track Name</label>
+              <input type="text" class="form-control" id="trackName" name="name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Track</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
+
+  
 </div>
 {% endblock %}

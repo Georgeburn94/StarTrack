@@ -109,8 +109,13 @@ a {
     color: #3f3f3f;
 }
 
-footer {
-    position: fixed;
+#page-container {
+    position: relative;
+    height: 100vh;
+}
+
+#footer {
+    position: absolute;
     bottom: 0;
     width: 100%;
 }

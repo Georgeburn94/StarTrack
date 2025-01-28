@@ -119,3 +119,12 @@ a {
     bottom: 0;
     width: 100%;
 }
+
+/* Navbar Styles */
+#logo {
+    height: 2.5rem;
+    margin-right: 0.5rem;
+    margin-left: 1rem;
+    
+}
+}

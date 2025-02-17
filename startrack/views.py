@@ -5,23 +5,36 @@ from django.core.paginator import Paginator
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .spotify_utility import parse_spotify_data_to_models
 
-
+@csrf_exempt
+def import_album(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            result = parse_spotify_data_to_models(data)
+            return JsonResponse({'success': True, 'message': result})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 @login_required
-def fetch_album_details_view(request):
+def fetch_album_details(request):
     if request.method == 'POST':
-        album_id = request.POST.get('album_id')
+        data = json.loads(request.body)
+        album_query = data.get('album_query')
         token = get_token()
-        result = search_for_album(token, album_id)
-        if result:
-            album_id = result["id"]
+        album_result = search_for_album(token, album_query)
+        if album_result:
+            album_id = album_result['id']
             album_details = get_album_tracks_with_details(token, album_id)
-            parsed_result = parse_spotify_data_to_models(album_details)
-            return JsonResponse({'success': True, 'message': parsed_result})
+            return JsonResponse(album_details)
         else:
-            return JsonResponse({'error': 'No album ID provided'}, status=400)
+            return JsonResponse({'error': 'Album not found'}, status=404)
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
 
 def home_page_view(request):
     search_query = request.GET.get('search', '')

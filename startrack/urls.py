@@ -15,4 +15,5 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
     path('album/<int:album_id>/upload-image/', upload_album_image_view, name='upload_album_image'),
+    path('import-album/', views.import_album, name='import_album'),
 ]

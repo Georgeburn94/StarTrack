@@ -120,7 +120,7 @@ def parse_spotify_data_to_models(spotify_data):
     tracks = spotify_data["tracks"]
 
     # Create or get the Artist instance
-    artist = Artist.objects.create(name=album_artist_name)
+    artist, created = Artist.objects.create(name=album_artist_name)
 
     # Create the Album instance and link it to the artist
     album = Album.objects.create(

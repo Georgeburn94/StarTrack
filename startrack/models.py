@@ -5,16 +5,34 @@ from cloudinary.models import CloudinaryField
 
 # Create your models here.
 class Artist(models.Model):
-    artistID = models.AutoField(primary_key=True)  # Primary Key
-    name = models.CharField(max_length=255)  # Name of the artist
-    # Albums will be linked through a ForeignKey in the Album model
+    artistID = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+
+    def delete_if_no_albums(self):
+        # Get fresh count from database
+        if not Album.objects.filter(artist=self).exists():
+            self.delete()
+            
+    def __str__(self):
+        return self.name
 
 class Album(models.Model):
-    albumID = models.AutoField(primary_key=True)  # Primary Key
-    name = models.CharField(max_length=255)  # Name of the album
-    year = models.PositiveIntegerField()  # Year the album was released
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name="albums")  # FK to Artist
+    albumID = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    year = models.PositiveIntegerField()
+    artist = models.ForeignKey(
+        Artist, 
+        on_delete=models.CASCADE,
+        related_name="albums"
+    )
     featured_image = models.URLField(max_length=200, blank=True, null=True)
+
+    def delete(self, *args, **kwargs):
+        artist = self.artist
+        super().delete(*args, **kwargs)
+        # Get fresh instance of artist to check albums
+        if not Album.objects.filter(artist=artist).exists():
+            artist.delete()
 
     def __str__(self):
         return self.name

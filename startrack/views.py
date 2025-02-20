@@ -83,23 +83,31 @@ def add_album_view(request):
         try:
             data = json.loads(request.body)
             # Create or get artist
-            artist, created = Artist.objects.get_or_create(
+            artist, _ = Artist.objects.get_or_create(
                 name=data.get('artist')
             )
-            # Create album
-            album = Album.objects.create(
+            
+            # Check if album already exists for this artist
+            album, created = Album.objects.get_or_create(
                 name=data.get('name'),
-                year=data.get('year'),
                 artist=artist,
-                featured_image=data.get('cover_image')
+                defaults={
+                    'year': data.get('year'),
+                    'featured_image': data.get('cover_image')
+                }
             )
-            # Create tracks if they exist
-            if 'tracks' in data:
+            
+            if created and 'tracks' in data:
+                # Only create tracks if this is a new album
                 for track in data['tracks']:
                     Track.objects.create(
                         name=track['track_name'],
                         album=album
                     )
+                return JsonResponse({'success': True, 'message': 'Album created successfully'})
+            elif not created:
+                return JsonResponse({'success': False, 'error': 'Album already exists'})
+                
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})

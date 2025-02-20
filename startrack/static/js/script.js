@@ -1,162 +1,83 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const starContainers = document.querySelectorAll('.star-rating');
-
-    starContainers.forEach(container => {
-        const number = parseInt(container.getAttribute('data-rating'), 10);
-
-        // Validate the input to ensure it's a non-negative integer
-        if (typeof number !== 'number' || number < 0 || !Number.isInteger(number)) {
-            console.error('Please provide a non-negative integer.');
-            return;
-        }
-
-        for (let i = 1; i <= 5; i++) {
-            const star = document.createElement('i');
-            star.className = 'fa fa-star'; // Font Awesome star icon class
-            if (i <= number) {
-                star.classList.add('checked');
-            }
-            container.appendChild(star);
-        }
-    });
-
-//     const addAlbumBtn = document.getElementById("addAlbumBtn");
-
-//     addAlbumBtn.addEventListener("click", function () {
-//         const albumName = document.getElementById("albumName").innerText;
-//         const albumArtist = document.getElementById("albumArtist").innerText;
-//         const releaseYear = document.getElementById("releaseYear").innerText;
-//         const coverImage = document.getElementById("albumCover").src;
-//         const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-//         const addAlbumUrl = addAlbumBtn.getAttribute("data-url");
-
-//         fetch(addAlbumUrl, {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 "X-CSRFToken": csrfToken,
-//             },
-//             body: JSON.stringify({
-//                 name: albumName,
-//                 artist: albumArtist,
-//                 year: releaseYear,
-//                 cover_image: coverImage
-//             }),
-//         })
-//         .then((response) => response.json())
-//         .then((data) => {
-//             if (data.success) {
-//                 alert("Album added successfully!");
-//                 // Close the modal
-//                 const modal = bootstrap.Modal.getInstance(document.getElementById("albumDetailsModal"));
-//                 modal.hide();
-//                 // Optionally, reload the page to see the updated list
-//                 location.reload();
-//             } else {
-//                 alert(data.message);
-//             }
-//         })
-//         .catch((error) => {
-//             console.error("Error adding album:", error);
-//             alert("Something went wrong. Please try again.");
-//         });
-//     });
-
-//     const fetchDetailsBtn = document.getElementById("fetchDetailsBtn");
-
-//     fetchDetailsBtn.addEventListener("click", function () {
-//         const albumID = document.getElementById("albumID").value;
-//         const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
-//         const fetchUrl = document.getElementById("fetchAlbumForm").dataset.url;
-
-//         fetch(fetchUrl, {
-//             method: "POST",
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 "X-CSRFToken": csrfToken,
-//             },
-//             body: JSON.stringify({ album_id: albumID }),
-//         })
-//         .then((response) => response.json())
-//         .then((data) => {
-//             if (data.error) {
-//                 alert(data.error);
-//             } else {
-//                 // Populate modal with album details
-//                 document.getElementById("albumCover").src = data.cover_image;
-//                 document.getElementById("albumName").innerText = data.album_name;
-//                 document.getElementById("albumArtist").innerText = data.album_artist;
-//                 document.getElementById("releaseYear").innerText = data.release_year;
-
-//                 // Show the modal
-//                 new bootstrap.Modal(document.getElementById("albumDetailsModal")).show();
-//             }
-//         })
-//         .catch((error) => {
-//             console.error("Error fetching album details:", error);
-//             alert("Something went wrong. Please try again.");
-//         });
-//     });
-// });
-
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Fetch Album Details
-    document.getElementById('fetchDetailsBtn').addEventListener('click', function() {
-        const albumQuery = document.getElementById('albumID').value;
-        const url = document.getElementById('fetchAlbumForm').dataset.url;
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    const fetchForm = document.getElementById('fetchAlbumForm');
+    const fetchBtn = document.getElementById('fetchDetailsBtn');
 
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify({ 'album_query': albumQuery })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert(data.error);
-            } else {
-                // Update modal elements
-                document.getElementById('albumCover').src = data.cover_image;
-                document.getElementById('albumName').textContent = data.album_name;
-                document.getElementById('albumArtist').textContent = data.album_artist;
-                document.getElementById('releaseYear').textContent = data.release_year;
-                // Store the entire data in the modal's dataset
-                const modal = document.getElementById('albumDetailsModal');
-                modal.dataset.albumData = JSON.stringify(data);
-                // Show the modal
-                new bootstrap.Modal(modal).show();
-            }
+    if (fetchBtn) {
+        fetchBtn.addEventListener('click', function() {
+            const albumQuery = document.getElementById('albumID').value;
+            const url = fetchForm.dataset.url;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ 'album_query': albumQuery })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    // Update modal elements with the new data structure
+                    document.getElementById('albumCover').src = data.cover_image;
+                    document.getElementById('albumName').textContent = data.name;
+                    document.getElementById('albumArtist').textContent = data.artist;
+                    document.getElementById('releaseYear').textContent = data.year;
+                    
+                    // Store the formatted album data for later use
+                    const modal = document.getElementById('albumDetailsModal');
+                    modal.dataset.albumData = JSON.stringify({
+                        name: data.name,
+                        artist: data.artist,
+                        year: data.year,
+                        cover_image: data.cover_image,
+                        tracks: data.tracks
+                    });
+                    
+                    // Show the modal
+                    new bootstrap.Modal(modal).show();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to fetch album details');
+            });
         });
-    });
+    }
 
-    // Add Album from Modal
-    document.getElementById('addAlbumBtn').addEventListener('click', function() {
-        const modal = document.getElementById('albumDetailsModal');
-        const albumData = JSON.parse(modal.dataset.albumData);
-        const url = "{% url 'import_album' %}";  // New URL for importing
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    // Handle the Add Album button click
+    const addAlbumBtn = document.getElementById('addAlbumBtn');
+    if (addAlbumBtn) {
+        addAlbumBtn.addEventListener('click', function() {
+            const modal = document.getElementById('albumDetailsModal');
+            const albumData = JSON.parse(modal.dataset.albumData);
+            const url = addAlbumBtn.dataset.url;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken
-            },
-            body: JSON.stringify(albumData)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                bootstrap.Modal.getInstance(modal).hide();
-                location.reload();
-            } else {
-                alert(data.error);
-            }
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(albumData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Album added successfully!');
+                    location.reload();
+                } else {
+                    alert('Failed to add album: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add album');
+            });
         });
-    });
-});})
+    }
+});

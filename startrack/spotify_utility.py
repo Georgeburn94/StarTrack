@@ -16,8 +16,8 @@ if ROOT_DIR not in sys.path:
 if os.path.isfile(os.path.join(ROOT_DIR, "env.py")):
     import env
 
-client_id = os.environ.get('CLIENT_ID')
-client_secret = os.environ.get('CLIENT_SECRET')
+client_id = os.environ.get('SPOTIFY_CLIENT_ID')
+client_secret = os.environ.get('SPOTIFY_CLIENT_SECRET')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
@@ -101,12 +101,14 @@ def get_album_tracks_with_details(token, album_id):
         "tracks": tracks
     }
 
-# Example usage
-token = get_token()
-result = search_for_album(token, "since+i+left+you")
-album_id = result["id"]
-album_details = get_album_tracks_with_details(token, album_id)
-print(album_details)
+if __name__ == '__main__':
+    # Example usage
+    token = get_token()
+    result = search_for_album(token, "since+i+left+you")
+    if result:
+        album_id = result["id"]
+        album_details = get_album_tracks_with_details(token, album_id)
+        print(album_details)
 
 # Parse Spotify data to models
 
@@ -120,7 +122,7 @@ def parse_spotify_data_to_models(spotify_data):
     tracks = spotify_data["tracks"]
 
     # Create or get the Artist instance
-    artist, created = Artist.objects.create(name=album_artist_name)
+    artist = Artist.objects.create(name=album_artist_name)
 
     # Create the Album instance and link it to the artist
     album = Album.objects.create(
@@ -139,6 +141,14 @@ def parse_spotify_data_to_models(spotify_data):
 
     return f"Album '{album_name}' by {album_artist_name} with {len(tracks)} tracks added successfully!"
 
-# Example usage
-parsed_result = parse_spotify_data_to_models(album_details)
-print(parsed_result)
+
+# Prevent execution during migrations
+if 'makemigrations' not in sys.argv and 'migrate' not in sys.argv:
+    token = get_token()
+    result = search_for_album(token, "since+i+left+you")
+
+    if result:
+        album_id = result["id"]
+        album_details = get_album_tracks_with_details(token, album_id)
+        parsed_result = parse_spotify_data_to_models(album_details)
+        print(parsed_result)

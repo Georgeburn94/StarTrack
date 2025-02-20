@@ -7,8 +7,7 @@ from django.http import JsonResponse
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .spotify_utility import parse_spotify_data_to_models
-
+from .spotify_utility import get_token, search_for_album, get_album_tracks_with_details
 @csrf_exempt
 def import_album(request):
     if request.method == 'POST':
@@ -23,17 +22,29 @@ def import_album(request):
 @login_required
 def fetch_album_details(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        album_query = data.get('album_query')
-        token = get_token()
-        album_result = search_for_album(token, album_query)
-        if album_result:
-            album_id = album_result['id']
-            album_details = get_album_tracks_with_details(token, album_id)
-            return JsonResponse(album_details)
-        else:
-            return JsonResponse({'error': 'Album not found'}, status=404)
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+        try:
+            data = json.loads(request.body)
+            album_query = data.get('album_query')
+            if not album_query:
+                return JsonResponse({'error': 'No search query provided'})
+            
+            token = get_token()
+            album_result = search_for_album(token, album_query)
+            
+            if album_result:
+                album_id = album_result['id']
+                album_details = get_album_tracks_with_details(token, album_id)
+                return JsonResponse({
+                    'name': album_details['album_name'],
+                    'artist': album_details['album_artist'],
+                    'year': album_details['release_year'],
+                    'cover_image': album_details['cover_image'],
+                    'tracks': album_details['tracks']
+                })
+            return JsonResponse({'error': 'Album not found'})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+    return JsonResponse({'error': 'Invalid request method'})
 
 
 def home_page_view(request):
@@ -55,16 +66,30 @@ def add_artist_view(request):
 @login_required
 def add_album_view(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        artist_name = data.get('artist')
-        year = data.get('year')
-        cover_image = data.get('cover_image')
-
-        artist, created = Artist.objects.get_or_create(name=artist_name)
-        Album.objects.create(name=name, year=year, artist=artist, featured_image=cover_image)
-        return JsonResponse({'success': True})
-    return JsonResponse({'success': False, 'message': 'Invalid request method'}, status=400)
+        try:
+            data = json.loads(request.body)
+            # Create or get artist
+            artist, created = Artist.objects.get_or_create(
+                name=data.get('artist')
+            )
+            # Create album
+            album = Album.objects.create(
+                name=data.get('name'),
+                year=data.get('year'),
+                artist=artist,
+                featured_image=data.get('cover_image')
+            )
+            # Create tracks if they exist
+            if 'tracks' in data:
+                for track in data['tracks']:
+                    Track.objects.create(
+                        name=track['track_name'],
+                        album=album
+                    )
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
 def album_tracks_view(request, album_id):
     album = get_object_or_404(Album, pk=album_id)

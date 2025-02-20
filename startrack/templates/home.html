@@ -6,31 +6,15 @@
 <div class="container mt-4">
 
 
-
-    <!-- Add Artist Button
-    <div class="row mb-4">
-        <div class="col-6 d-flex justify-content-center">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addArtistModal">
-                Add Artist
-            </button>
-        </div>
-        <div class="col-6 d-flex justify-content-center">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
-                Add Album
-            </button>
-        </div>
-    </div> -->
-
     {% if user.is_authenticated %}
-    <!-- Artists and Albums Tables Side by Side -->
-    <!-- Search Form -->
-    <form method="GET" action="{% url 'home' %}" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control" placeholder="Search for artists..."
-                value="{{ request.GET.search }}">
-            <button class="btn btn-primary" type="submit">Search</button>
-        </div>
-    </form>
+<!-- Search Form -->
+<form method="GET" action="{% url 'home' %}" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="search" class="form-control" placeholder="Search for artists or albums..."
+            value="{{ request.GET.search }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>
 
     <div class="row">
         <!-- Artists Table -->

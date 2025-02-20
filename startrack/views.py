@@ -8,6 +8,9 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from .spotify_utility import get_token, search_for_album, get_album_tracks_with_details
+from django.db.models import Q
+
+
 @csrf_exempt
 def import_album(request):
     if request.method == 'POST':
@@ -49,11 +52,22 @@ def fetch_album_details(request):
 
 def home_page_view(request):
     search_query = request.GET.get('search', '')
+    
     if search_query:
-        artists = Artist.objects.filter(name__icontains=search_query)
+        # Search for artists and albums matching the query
+        artists = Artist.objects.filter(
+            Q(name__icontains=search_query) |  # Search artist names
+            Q(albums__name__icontains=search_query)  # Search album names
+        ).distinct()
     else:
+        # If no search, show all artists
         artists = Artist.objects.all()
-    return render(request, 'home.html', {'artists': artists})
+
+    return render(request, 'home.html', {
+        'artists': artists,
+        'search_query': search_query
+    })
+
 
 def add_artist_view(request):
     if request.method == 'POST':
@@ -125,12 +139,6 @@ def add_track_view(request, album_id):
         return redirect('album_tracks', album_id=album.albumID)
     return render(request, 'album_tracks.html', {'album': album})
 
-@login_required
-def delete_track_view(request, track_id):
-    track = get_object_or_404(Track, pk=track_id)
-    album_id = track.album.albumID
-    track.delete()
-    return redirect('album_tracks', album_id=album_id)
 
 def review_feed_view(request):
     reviews = Review.objects.select_related('track__album__artist', 'user').order_by('-id')
@@ -165,3 +173,4 @@ def delete_album_view(request, album_id):
     if Artist.objects.filter(pk=artist.artistID).exists():
         return redirect('artist_albums', artist_id=artist.artistID)
     return redirect('home')
+

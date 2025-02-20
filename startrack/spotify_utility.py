@@ -109,7 +109,7 @@ def get_album_tracks_with_details(token, album_id):
 if __name__ == '__main__':
     # Example usage
     token = get_token()
-    result = search_for_album(token, "since+i+left+you")
+    result = search_for_album(token, "meat+is+murder")
     if result:
         album_id = result["id"]
         album_details = get_album_tracks_with_details(token, album_id)

@@ -5,6 +5,7 @@ from pathlib import Path
 import base64
 from requests import post, get
 import json
+from startrack.models import Album, Track, Artist
 
 
 # Load environment variables
@@ -23,9 +24,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
 django.setup()
 
-from startrack.models import Album, Track, Artist
 
 # Get Auth Token
+
 
 def get_token():
     auth_string = client_id + ":" + client_secret
@@ -44,10 +45,12 @@ def get_token():
     token = json_result['access_token']
     return token
 
+
 def get_auth_header(token):
     return {"Authorization": "Bearer " + token}
 
 # Search for album id
+
 
 def search_for_album(token, album_id):
     url = "https://api.spotify.com/v1/search"
@@ -66,6 +69,7 @@ def search_for_album(token, album_id):
     return json_result[0]
 
 # Get album tracks
+
 
 def get_album_tracks_with_details(token, album_id):
     # Get album details
@@ -100,6 +104,7 @@ def get_album_tracks_with_details(token, album_id):
         "cover_image": cover_image,
         "tracks": tracks
     }
+
 
 if __name__ == '__main__':
     # Example usage

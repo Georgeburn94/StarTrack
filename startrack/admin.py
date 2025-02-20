@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Artist, Album, Track, Review
 
+
 class AlbumAdmin(admin.ModelAdmin):
     def delete_queryset(self, request, queryset):
         # Get all affected artists before deletion
@@ -15,6 +16,7 @@ class AlbumAdmin(admin.ModelAdmin):
                     artist.delete()
             except Artist.DoesNotExist:
                 pass
+
 
 # Register your models here.
 admin.site.register(Artist)

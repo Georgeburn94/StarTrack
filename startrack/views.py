@@ -91,6 +91,7 @@ def add_album_view(request):
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'message': 'Invalid request method'})
 
+
 def album_tracks_view(request, album_id):
     album = get_object_or_404(Album, pk=album_id)
     tracks = album.tracks.all()
@@ -153,3 +154,14 @@ def upload_album_image_view(request, album_id):
             return JsonResponse({'success': True})
         return JsonResponse({'success': False, 'error': 'No image URL provided'})
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@login_required
+def delete_album_view(request, album_id):
+    album = get_object_or_404(Album, pk=album_id)
+    # Store artist reference before deletion
+    artist = album.artist
+    album.delete()
+    # Redirect to artist's album list if artist still exists, otherwise home
+    if Artist.objects.filter(pk=artist.artistID).exists():
+        return redirect('artist_albums', artist_id=artist.artistID)
+    return redirect('home')

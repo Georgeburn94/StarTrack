@@ -16,6 +16,7 @@ class Artist(models.Model):
     def __str__(self):
         return self.name
 
+
 class Album(models.Model):
     albumID = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -45,6 +46,7 @@ class Track(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")  # FK to User

@@ -9,3 +9,43 @@
     color: #f39c12;
     opacity: 1;
 }
+
+/* Footer Styles */
+.footer {
+    position: relative;
+    margin-top: 3rem;
+}
+
+.social-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: var(--bs-primary);
+    transform: translateY(-3px);
+    color: white !important;
+    text-decoration: none;
+}
+
+.divider {
+    width: 60%;
+    margin: 1.5rem auto;
+    opacity: 0.2;
+}
+
+/* Ensure footer stays at bottom */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+}

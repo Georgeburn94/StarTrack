@@ -51,36 +51,45 @@
             </table>
         </div>
 
-        <!-- Albums Table -->
-        <div class="col-md-6">
-            <div class="d-flex justify-content-between">
-                <h3>Albums</h3>
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">Album Name</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Artist</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for artist in artists %}
-                    {% for album in artist.albums.all %}
-                    <tr>
-                        <td><a href="{% url 'album_tracks' album.albumID %}">{{ album.name }}</a></td>
-                        <td>{{ album.year }}</td>
-                        <td>{{ artist.name }}</td>
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+<!-- Albums Table -->
+<div class="col-md-6">
+    <div class="d-flex justify-content-between">
+        <h3>Albums</h3>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addAlbumModal">
+            <i class="fa-solid fa-plus"></i>
+        </button>
     </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Cover</th>
+                <th scope="col">Album Name</th>
+                <th scope="col">Year</th>
+                <th scope="col">Artist</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for artist in artists %}
+            {% for album in artist.albums.all %}
+            <tr>
+                <td>
+                    {% if album.featured_image %}
+                    <img src="{{ album.featured_image }}" alt="{{ album.name }}" class="album-thumbnail">
+                    {% else %}
+                    <div class="album-thumbnail-placeholder">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'album_tracks' album.albumID %}">{{ album.name }}</a></td>
+                <td>{{ album.year }}</td>
+                <td>{{ artist.name }}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
     <!-- Button to fetch album details -->
     <form id="fetchAlbumForm" data-url="{% url 'fetch_album_details' %}">
